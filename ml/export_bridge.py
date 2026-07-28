@@ -10,10 +10,11 @@ OUTPUT_DIM = 128
 class LatentBridge(nn.Module):
     def __init__(self):
         super(LatentBridge, self).__init__()
-        # Linear projection without bias to simulate pure Procrustes matrix multiplication
-        self.linear = nn.Linear(INPUT_DIM, OUTPUT_DIM, bias=False)
-        # Initialize with orthogonal weights to simulate Procrustes alignment
+        # Use bias=True to force ONNX to export a Gemm node (which EZKL handles perfectly)
+        # but initialize the bias to strictly zero to simulate a pure Procrustes matrix multiplication without affine translation.
+        self.linear = nn.Linear(INPUT_DIM, OUTPUT_DIM, bias=True)
         nn.init.orthogonal_(self.linear.weight)
+        nn.init.zeros_(self.linear.bias)
 
     def forward(self, x):
         return self.linear(x)
@@ -29,8 +30,7 @@ def main():
     model.eval()
 
     # 2. Generate random input tensor X simulating Agent A's latent vector
-    # Add a batch dimension of 1 to ensure EZKL handles the MatMul shapes gracefully
-    x = torch.randn(1, INPUT_DIM)
+    x = torch.randn(INPUT_DIM)
 
     # 3. Compute the output Y
     with torch.no_grad():
