@@ -31,8 +31,8 @@ flowchart LR
 3. **EVM Verification (`contracts/`)**: A Foundry project containing a `BridgeEntry.sol` dummy contract that verifies the proof on-chain using the EZKL-generated `LatentBridgeVerifier.sol`.
 
 ## Prerequisites
-- **Python 3.10+**
-- **PyTorch** & **ONNX** (`pip install torch onnx ezkl`)
+- **Python 3.11+**
+- **ML Dependencies** (`pip install -r ml/requirements.txt`)
 - **EZKL CLI** v23+ (Ensure `ezkl` is in your PATH. [Installation instructions](https://github.com/zkonduit/ezkl))
 - **Foundry** (Ensure `forge` is in your PATH. [Installation instructions](https://getfoundry.sh/))
 
