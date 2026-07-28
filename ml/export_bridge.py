@@ -30,7 +30,7 @@ def main():
     model.eval()
 
     # 2. Generate random input tensor X simulating Agent A's latent vector
-    x = torch.randn(INPUT_DIM)
+    x = torch.randn(1, INPUT_DIM)
 
     # 3. Compute the output Y
     with torch.no_grad():
