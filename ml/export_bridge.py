@@ -29,8 +29,8 @@ def main():
     model.eval()
 
     # 2. Generate random input tensor X simulating Agent A's latent vector
-    # Create dummy input WITHOUT batch dimension
-    x = torch.randn(INPUT_DIM)
+    # Add a batch dimension of 1 to ensure EZKL handles the MatMul shapes gracefully
+    x = torch.randn(1, INPUT_DIM)
 
     # 3. Compute the output Y
     with torch.no_grad():
