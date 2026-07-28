@@ -26,8 +26,11 @@ jobs:
 
     - name: Install EZKL CLI
       run: |
-        curl -sSL https://raw.githubusercontent.com/zkonduit/ezkl/main/install_ezkl_cli.sh | bash
-        echo "$HOME/.ezkl" >> $GITHUB_PATH
+        curl -sSL https://github.com/zkonduit/ezkl/releases/latest/download/ezkl-linux-gnu.tar.gz -o ezkl.tar.gz
+        tar -xzf ezkl.tar.gz
+        mkdir -p $HOME/.ezkl/bin
+        mv ezkl $HOME/.ezkl/bin/
+        echo "$HOME/.ezkl/bin" >> $GITHUB_PATH
 
     - name: Install Foundry
       uses: foundry-rs/foundry-toolchain@v1
