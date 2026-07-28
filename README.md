@@ -60,6 +60,9 @@ forge test -vvv
 ```
 If the setup is correct, you should see `[PASS] test_zk_proof_verification()`.
 
-## Notes
+## Notes & Known Issues
 - **Windows Users**: The `generate_proof.py` script automatically patches the missing `HOME` environment variable issue that can cause `NotPresent` panics in some EZKL versions.
 - **Stack Too Deep**: The generated EZKL Solidity verifier can hit EVM stack limits. We resolve this by enabling `via_ir` and using `assembly ("memory-safe")` in the generated verifier. This is pre-configured in `foundry.toml` (`optimizer_runs = 1`).
+- **EZKL MatMul Dimension Mismatch**: Pure `MatMul` nodes (e.g. from `nn.Linear(bias=False)`) with 1D vectors can cause dimension mismatch errors in EZKL's `enforce_equality`. The PoC works around this by using `bias=True` (which exports a `Gemm` node) but initializing the bias strictly to `0` to preserve the Procrustes matrix multiplication math.
+- **PyTorch ONNX Exporter**: PyTorch 2.X's new Dynamo ONNX exporter produces graphs that EZKL's `tract` parser misinterprets. We strictly enforce the legacy TorchScript exporter (`dynamo=False`) during the ONNX export.
+- **EZKL Calibration Bug**: When `input_visibility` is set to `Private`, running `ezkl calibrate-settings` incorrectly re-injects the private input's shape into `model_instance_shapes` in the `settings.json` file. This causes `dimension mismatch` during the mock prover. The `generate_proof.py` script includes a post-calibration patch that manually strips the private input from the instance shapes.
