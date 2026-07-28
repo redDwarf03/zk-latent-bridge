@@ -2,8 +2,10 @@
 
 This repository contains a Proof of Concept (PoC) for a Zero-Knowledge Latent Bridge. 
 
-## Context: Decentralized AI (DeAI)
+## Context & Inspiration
 In a Decentralized AI network, different agents may use entirely different latent spaces. For example, Agent A (using DINOv2, 1024-dim) needs to communicate its latent state to Agent B (using I-JEPA, 1280-dim). To do this without exposing the raw data, Agent A applies a translation matrix $W$ (derived from Procrustes alignment/CKA).
+
+Inspired by the work of [Abdelhamid Bakhta](https://github.com/AbdelStark) on Zero-Knowledge Machine Learning (zkML), this project bridges privacy-preserving cryptographic proofs with inter-model AI collaboration, rooted in the core values of security, trust, and decentralization.
 
 This project demonstrates how to export such a Machine Learning model (simulating a latent vector transformation) to ONNX, generate a Zero-Knowledge proof of its execution using EZKL, and verify that proof trustlessly on-chain via an EVM smart contract (using Foundry) on the Base L2 blockchain.
 
@@ -66,3 +68,7 @@ If the setup is correct, you should see `[PASS] test_zk_proof_verification()`.
 - **EZKL MatMul Dimension Mismatch**: Pure `MatMul` nodes (e.g. from `nn.Linear(bias=False)`) with 1D vectors can cause dimension mismatch errors in EZKL's `enforce_equality`. The PoC works around this by using `bias=True` (which exports a `Gemm` node) but initializing the bias strictly to `0` to preserve the Procrustes matrix multiplication math.
 - **PyTorch ONNX Exporter**: PyTorch 2.X's new Dynamo ONNX exporter produces graphs that EZKL's `tract` parser misinterprets. We strictly enforce the legacy TorchScript exporter (`dynamo=False`) during the ONNX export.
 - **EZKL Calibration Bug**: When `input_visibility` is set to `Private`, running `ezkl calibrate-settings` incorrectly re-injects the private input's shape into `model_instance_shapes` in the `settings.json` file. This causes `dimension mismatch` during the mock prover. The `generate_proof.py` script includes a post-calibration patch that manually strips the private input from the instance shapes.
+
+## Acknowledgements & Credits
+- **[Abdelhamid Bakhta](https://github.com/AbdelStark)**: Inspired by his work and research in Zero-Knowledge Machine Learning (zkML).
+- **EZKL & Foundry**: Powered by [EZKL](https://github.com/zkonduit/ezkl) for zkML proving and [Foundry](https://github.com/foundry-rs/foundry) for EVM verifier smart contract deployment & testing.
