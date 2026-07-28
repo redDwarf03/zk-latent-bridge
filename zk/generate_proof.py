@@ -11,8 +11,8 @@ def run_cmd(args):
     subprocess.run(args, check=True, env=env)
 
 def main():
-    # Use absolute paths for everything to be safe
-    base_dir = os.getcwd()
+    # Derive the absolute path of the repository root dynamically
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     model_path = os.path.join(base_dir, 'bridge.onnx')
     data_path = os.path.join(base_dir, 'input.json')
     settings_path = os.path.join(base_dir, 'settings.json')
@@ -42,13 +42,20 @@ def main():
             settings["run_args"]["variables"] = []
         # Ensure scale is set
         settings["run_args"]["scale"] = 12
+        # Set visibility for strict privacy
+        settings["run_args"]["input_visibility"] = "Private"
+        settings["run_args"]["param_visibility"] = "Public"
+        settings["run_args"]["output_visibility"] = "Public"
     
     with open(settings_path, 'w') as f:
         json.dump(settings, f, indent=2)
 
-    # Calibrate settings
+    # Calibrate settings with fallback
     print("Calibrating settings (optional but good)...")
-    run_cmd([ezkl_cli, "calibrate-settings", "-M", model_path, "-O", settings_path, "-D", data_path, "--target", "resources"])
+    try:
+        run_cmd([ezkl_cli, "calibrate-settings", "-M", model_path, "-O", settings_path, "-D", data_path, "--target", "resources"])
+    except subprocess.CalledProcessError as e:
+        print(f"Warning: Calibration failed or not available, proceeding with default settings. Error: {e}")
 
     print("Compiling circuit...")
     run_cmd([ezkl_cli, "compile-circuit", "-M", model_path, "-S", settings_path, "--compiled-circuit", compiled_model_path])

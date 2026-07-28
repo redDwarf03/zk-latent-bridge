@@ -1,6 +1,11 @@
 # ZK Latent Bridge PoC
 
-This repository contains a Proof of Concept (PoC) for a Zero-Knowledge Latent Bridge. It demonstrates how to export a Machine Learning model (simulating a latent vector transformation) to ONNX, generate a Zero-Knowledge proof using EZKL, and verify that proof on-chain via an EVM smart contract (using Foundry).
+This repository contains a Proof of Concept (PoC) for a Zero-Knowledge Latent Bridge. 
+
+## Context: Decentralized AI (DeAI)
+In a Decentralized AI network, different agents may use entirely different latent spaces. For example, Agent A (using DINOv2, 1024-dim) needs to communicate its latent state to Agent B (using I-JEPA, 1280-dim). To do this without exposing the raw data, Agent A applies a translation matrix $W$ (derived from Procrustes alignment/CKA).
+
+This project demonstrates how to export such a Machine Learning model (simulating a latent vector transformation) to ONNX, generate a Zero-Knowledge proof of its execution using EZKL, and verify that proof trustlessly on-chain via an EVM smart contract (using Foundry) on the Base L2 blockchain.
 
 ## Architecture
 1. **ML Export (`ml/export_bridge.py`)**: Exports a simple PyTorch model (linear projection from 64 to 128 dimensions) to ONNX format.
