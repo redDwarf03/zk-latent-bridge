@@ -57,6 +57,18 @@ def main():
     except subprocess.CalledProcessError as e:
         print(f"Warning: Calibration failed or not available, proceeding with default settings. Error: {e}")
 
+    # FIX: When input_visibility is "Private", calibrate-settings incorrectly includes the input shape
+    # in model_instance_shapes. We must manually remove it so the prover doesn't expect the input as a public instance.
+    with open(settings_path, "r") as f:
+        calib_settings = json.load(f)
+    
+    # Force the instance shape to only include the output (128 dimensions)
+    if "model_instance_shapes" in calib_settings:
+        calib_settings["model_instance_shapes"] = [[128]]
+        
+    with open(settings_path, "w") as f:
+        json.dump(calib_settings, f, indent=4)
+
     print("Compiling circuit...")
     run_cmd([ezkl_cli, "compile-circuit", "-M", model_path, "-S", settings_path, "--compiled-circuit", compiled_model_path])
 
