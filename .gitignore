@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.pyc
+
+# ML / ONNX
+*.onnx
+
+# EZKL ZK Proof generated files
+*.compiled
+*.key
+kzg.srs
+witness.json
+proof.json
+settings.json
+calldata.json
+input.json
+.ezkl/
+
+# Foundry
+contracts/lib/
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+
+# Downloaded Binaries
+foundry_bin/
+foundry.zip
+ezkl.exe
+ezkl-windows-msvc.tar.gz
+
+# OS
+.DS_Store
+Thumbs.db
