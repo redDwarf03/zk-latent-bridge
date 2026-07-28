@@ -49,7 +49,8 @@ def main():
         opset_version=17,
         do_constant_folding=True,
         input_names=['input'],
-        output_names=['output']
+        output_names=['output'],
+        dynamo=False
     )
     print(f"Exported model to {onnx_filename}")
 
