@@ -22,6 +22,7 @@ contract BridgeTest is Test {
 
         // The payload is ABI-encoded for `verifyProof(bytes,uint256[])`
         // We will modify the 4-byte function selector to match `BridgeEntry.processBridge(bytes,uint256[])`
+        require(payload.length >= 4, "Invalid calldata: too short");
         bytes4 newSelector = BridgeEntry.processBridge.selector;
         payload[0] = newSelector[0];
         payload[1] = newSelector[1];

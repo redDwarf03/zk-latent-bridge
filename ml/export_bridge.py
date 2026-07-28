@@ -10,8 +10,8 @@ OUTPUT_DIM = 128
 class LatentBridge(nn.Module):
     def __init__(self):
         super(LatentBridge, self).__init__()
-        # Linear projection with bias
-        self.linear = nn.Linear(INPUT_DIM, OUTPUT_DIM, bias=True)
+        # Linear projection without bias to simulate pure Procrustes matrix multiplication
+        self.linear = nn.Linear(INPUT_DIM, OUTPUT_DIM, bias=False)
         # Initialize with orthogonal weights to simulate Procrustes alignment
         nn.init.orthogonal_(self.linear.weight)
 
@@ -49,8 +49,7 @@ def main():
         opset_version=17,
         do_constant_folding=True,
         input_names=['input'],
-        output_names=['output'],
-        dynamo=False
+        output_names=['output']
     )
     print(f"Exported model to {onnx_filename}")
 
