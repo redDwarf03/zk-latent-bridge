@@ -48,5 +48,5 @@ jobs:
     - name: Run Foundry Tests
       working-directory: ./contracts
       run: |
-        forge install foundry-rs/forge-std --no-git --no-commit || true
+        forge install foundry-rs/forge-std --no-git || true
         forge test -vvv
