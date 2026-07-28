@@ -44,7 +44,7 @@ def main():
         settings["run_args"]["scale"] = 12
         # Set visibility for strict privacy
         settings["run_args"]["input_visibility"] = "Private"
-        settings["run_args"]["param_visibility"] = "Public"
+        settings["run_args"]["param_visibility"] = "Fixed"
         settings["run_args"]["output_visibility"] = "Public"
     
     with open(settings_path, 'w') as f:
