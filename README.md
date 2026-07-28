@@ -7,6 +7,24 @@ In a Decentralized AI network, different agents may use entirely different laten
 
 This project demonstrates how to export such a Machine Learning model (simulating a latent vector transformation) to ONNX, generate a Zero-Knowledge proof of its execution using EZKL, and verify that proof trustlessly on-chain via an EVM smart contract (using Foundry) on the Base L2 blockchain.
 
+## Visual Architecture
+
+```mermaid
+flowchart LR
+    A[Agent A <br> DINOv2] -->|Extracts| X(Latent Vector X)
+    W[(Translation Matrix W <br> Procrustes)] --> EZKL
+    X --> EZKL{EZKL zkML Prover}
+    
+    EZKL -->|Outputs| Y(Translated Vector Y)
+    EZKL -->|Outputs| P[ZK-SNARK Proof]
+    
+    P -.->|Calldata| SC[EVM Verifier Contract <br> Base L2]
+    Y -.->|Calldata| SC
+    
+    SC -->|Verify On-Chain| V{Valid?}
+    V -- Yes --> B[Agent B <br> I-JEPA]
+```
+
 ## Architecture
 1. **ML Export (`ml/export_bridge.py`)**: Exports a simple PyTorch model (linear projection from 64 to 128 dimensions) to ONNX format.
 2. **ZK Proof Generation (`zk/generate_proof.py`)**: Uses EZKL to compile the circuit, perform the setup, mock the proof, and generate a ZK-SNARK proof (`proof.json`) as well as the Solidity verifier.
