@@ -4,6 +4,7 @@ __pycache__/
 
 # ML / ONNX
 *.onnx
+*.onnx.data
 
 # EZKL ZK Proof generated files
 *.compiled
@@ -14,6 +15,7 @@ proof.json
 settings.json
 calldata.json
 input.json
+*.abi
 .ezkl/
 
 # Foundry
